@@ -1,0 +1,30 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Unknown </title></head><body>
+<h1 id="flow-diagram-of-carpark-events">Flow diagram of carpark events</h1>
+<p>```mermaid
+sequenceDiagram
+    participant Car as Car (ðŸš—)
+    participant Sensor as :Sensor
+    participant MQTT_S as MQTT (topic 'sensor')
+    participant Carpark as :Carpark
+    participant MQTT_C as MQTT (topic 'carpark')
+    participant Display as :Display</p>
+<pre><code>Car-&gt;&gt;Sensor: Enters Carpark
+Sensor-&gt;&gt;MQTT_S: Publish "entered" event with temperature
+MQTT_S-&gt;&gt;Carpark: Carpark entered event
+Carpark-&gt;&gt;+Carpark: Increment total cars and set temperature
+Note over Carpark: If cars &gt; spaces, set spaces available to 0
+Carpark-&gt;&gt;MQTT_C: Publish available spaces and temperature
+MQTT_C-&gt;&gt;Display: Spaces available, total spaces, temperature
+Note over Display: If spaces available is 0, shows "FULL"
+
+Car-&gt;&gt;Sensor: Leaves Carpark
+Sensor-&gt;&gt;MQTT_S: Publish "exited" event with temperature
+MQTT_S-&gt;&gt;Carpark: Carpark exited event
+Carpark-&gt;&gt;+Carpark: Decrement total cars and set temperature
+Note over Carpark: If cars &gt; spaces, set spaces available to 0
+Carpark-&gt;&gt;MQTT_C: Publish available spaces and temperature
+MQTT_C-&gt;&gt;Display: Spaces available, total spaces, temperature
+Note over Display: If spaces available is 0, shows "FULL"
+</code></pre>
+<p>```</p>
+</body></html>

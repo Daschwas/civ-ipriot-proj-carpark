@@ -1,9 +1,10 @@
 from datetime import datetime
 
-import mqtt_device
+
 import paho.mqtt.client as paho
+import mqtt_device
+import toml as toml
 from paho.mqtt.client import MQTTMessage
-install toml
 
 
 class CarPark(mqtt_device.MqttDevice):
@@ -11,6 +12,8 @@ class CarPark(mqtt_device.MqttDevice):
 
     def __init__(self, config):
         super().__init__(config)
+        # carpark_name = config['location']
+
         self.total_spaces = config['total-spaces']
         self.total_cars = config['total-cars']
         self.client.on_message = self.on_message
@@ -68,10 +71,13 @@ class CarPark(mqtt_device.MqttDevice):
 
 
 if __name__ == '__main__':
-    config_file = 'config.toml'
-    with open(config_file, 'r+') as file:
-        config = toml.load(file)
-    print("Config file read!")
-    car_park = CarPark(config)
-    print("Carpark initialized")
+    from config_parser import parse_config
+    config = parse_config("config.toml")
+    car_park = CarPark(config['MOO'])
+    # config_file = 'config.toml'
+    # with open(config_file, 'r+') as file:
+        # config = toml.load(file)
+    # print("Config file read!")
+    # car_park = CarPark(config)
+    # print("Carpark initialized")
     print("Carpark initialized")

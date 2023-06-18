@@ -2,11 +2,13 @@
 a publication via mqtt"""
 import random
 
+import toml
+
 import mqtt_device
-install toml
+
 
 class Sensor(mqtt_device.MqttDevice):
-
+    # TODO consider adding def__init__ into this class
     @property
     def temperature(self):
         """Returns the current temperature"""
@@ -30,12 +32,9 @@ class Sensor(mqtt_device.MqttDevice):
 
 
 if __name__ == '__main__':
-    config_file = 'config.toml'
-    with open(config_file, 'r+') as file:
-        config1 = toml.load(file)
-    print("Config file read!")
-    #TODO: Read previous config from file instead of embedding
-
+    from config_parser import parse_config
+    config1 = parse_config("config.toml")
+    # consider moving MOO to a moo.toml and have above call that instead of config
     sensor1 = Sensor(config1)
 
 

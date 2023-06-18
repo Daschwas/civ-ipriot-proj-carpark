@@ -1,5 +1,7 @@
 import mqtt_device
 import time
+install toml
+
 class Display(mqtt_device.MqttDevice):
     """Displays the number of cars and the temperature"""
     def __init__(self, config):
@@ -21,13 +23,17 @@ class Display(mqtt_device.MqttDevice):
        # TODO: Parse the message and extract free spaces,\
        #  temperature, time
 if __name__ == '__main__':
-    config = {'name': 'display',
-     'location': 'L306',
-     'topic-root': "lot",
-     'broker': 'localhost',
-     'port': 1883,
-     'topic-qualifier': 'na'
-     }
+    config_file = 'config.toml'
+    with open(config_file, 'r+') as file:
+        config = toml.load(file)
+    print("Config file read!")
+    #config = {'name': 'display',
+     #'location': 'L306',
+     #'topic-root': "lot",
+     #'broker': 'localhost',
+     #'port': 1883,
+     #'topic-qualifier': 'na'
+     #}
     # TODO: Read config from file
     display = Display(config)
 

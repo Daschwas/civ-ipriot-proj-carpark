@@ -3,6 +3,7 @@ from datetime import datetime
 import mqtt_device
 import paho.mqtt.client as paho
 from paho.mqtt.client import MQTTMessage
+install toml
 
 
 class CarPark(mqtt_device.MqttDevice):
@@ -59,7 +60,7 @@ class CarPark(mqtt_device.MqttDevice):
     def on_message(self, client, userdata, msg: MQTTMessage):
         payload = msg.payload.decode()
         # TODO: Extract temperature from payload
-        # self.temperature = ... # Extracted value
+        # self.temperature = ...  look for temperature key # Extracted value
         if 'exit' in payload:
             self.on_car_exit()
         else:
@@ -67,17 +68,10 @@ class CarPark(mqtt_device.MqttDevice):
 
 
 if __name__ == '__main__':
-    config = {'name': "raf-park",
-              'total-spaces': 130,
-              'total-cars': 0,
-              'location': 'L306',
-              'topic-root': "lot",
-              'broker': 'localhost',
-              'port': 1883,
-              'topic-qualifier': 'entry',
-              'is_stuff': False
-              }
-    # TODO: Read config from file
+    config_file = 'config.toml'
+    with open(config_file, 'r+') as file:
+        config = toml.load(file)
+    print("Config file read!")
     car_park = CarPark(config)
     print("Carpark initialized")
     print("Carpark initialized")

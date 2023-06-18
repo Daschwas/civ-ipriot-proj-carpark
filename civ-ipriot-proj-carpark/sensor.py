@@ -3,7 +3,7 @@ a publication via mqtt"""
 import random
 
 import mqtt_device
-
+install toml
 
 class Sensor(mqtt_device.MqttDevice):
 
@@ -30,13 +30,11 @@ class Sensor(mqtt_device.MqttDevice):
 
 
 if __name__ == '__main__':
-    config1 = {'name': 'sensor',
-              'location': 'moondalup',
-              'topic-root': "lot",
-              'broker': 'localhost',
-              'port': 1883,
-              }
-    # TODO: Read previous config from file instead of embedding
+    config_file = 'config.toml'
+    with open(config_file, 'r+') as file:
+        config1 = toml.load(file)
+    print("Config file read!")
+    #TODO: Read previous config from file instead of embedding
 
     sensor1 = Sensor(config1)
 

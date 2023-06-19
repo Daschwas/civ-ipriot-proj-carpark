@@ -1,14 +1,15 @@
 """"Demonstrates a simple implementation of an 'event' listener that triggers
 a publication via mqtt"""
 import random
-
-import toml
-
+from config_parser import parse_config
 import mqtt_device
 
 
 class Sensor(mqtt_device.MqttDevice):
-    # TODO consider adding def__init__ into this class
+    def __init__(self, config):
+        super().__init__(config['broker'])
+        sensor_name = config['broker']['sensor']
+
     @property
     def temperature(self):
         """Returns the current temperature"""
@@ -32,14 +33,12 @@ class Sensor(mqtt_device.MqttDevice):
 
 
 if __name__ == '__main__':
-    from config_parser import parse_config
-    config1 = parse_config("config.toml")
-    # consider moving MOO to a moo.toml and have above call that instead of config
+    config1 = parse_config('config.toml')
     sensor1 = Sensor(config1)
 
+    print("Sensor Name:", sensor1)
+
+    sensor1 = Sensor(config1)
 
     print("Sensor initialized")
     sensor1.start_sensing()
-
-    sensor1.start_sensing()
-

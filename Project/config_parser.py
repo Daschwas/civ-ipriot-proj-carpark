@@ -39,10 +39,4 @@ def parse_config(filename: str) -> dict:
         config = tomli.load(fp)
     return config
 
-    contents = open(config.toml, r+).splitlines()
-    config_dict= {}
-    for words in contents:
-        k,v = words.split(':')
-        config_dict[k] = v
-
-    #return {'location': 'TBD', 'total_spaces': 0, 'broker_host': 'TBD', 'broker_port': 0}
+import toml

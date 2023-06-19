@@ -74,10 +74,5 @@ if __name__ == '__main__':
     from config_parser import parse_config
     config = parse_config("config.toml")
     car_park = CarPark(config['MOO'])
-    # config_file = 'config.toml'
-    # with open(config_file, 'r+') as file:
-        # config = toml.load(file)
-    # print("Config file read!")
-    # car_park = CarPark(config)
-    # print("Carpark initialized")
+
     print("Carpark initialized")

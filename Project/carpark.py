@@ -1,4 +1,5 @@
 from datetime import datetime
+import random
 
 import paho.mqtt.client as paho
 import mqtt_device
@@ -10,43 +11,41 @@ class CarPark(mqtt_device.MqttDevice):
     """Creates a carpark object to store the state of cars in the lot"""
 
     def __init__(self, config):
-        super().__init__(config)
-        # carpark_name = config['location']
-
-        self.total_spaces = config['total-spaces']
-        self.total_cars = config['total-cars']
+        super().__init__(config['broker'])
+        carpark_name = config['broker']['location']
+        print(f" Carpark at {carpark_name} is ready")
+        self.total_spaces = int(config['MOO']['total_spaces'])
+        self.total_cars = int(config['MOO']['total_cars'])
         self.client.on_message = self.on_message
-        self.client.subscribe('sensor')
+        self.client.subscribe('car/sensor')
         self.client.loop_forever()
-        self._temperature = None
+
 
     @property
     def available_spaces(self):
         available = self.total_spaces - self.total_cars
-        return max(available, 0)
+        if available > self.total_spaces:
+            available = self.total_spaces
+        elif self.total_cars > self.total_spaces:
+            available = 0
+        return available
 
-    @property
     def temperature(self):
-        self._temperature
-
-    @temperature.setter
-    def temperature(self, value):
-        self._temperature = value
+        mean = 24
+        std_dev = 6
+        temperature = int(random.gauss(mean, std_dev))
+        return temperature
 
     def _publish_event(self):
-        readable_time = datetime.now().strftime('%H:%M')
-        print(
-            (
-                    f"TIME: {readable_time}, "
-                    + f"SPACES: {self.available_spaces}, "
-                    + "TEMPC: 42"
-            )
-        )
-        message = (
-                f"TIME: {readable_time}, "
-                + f"SPACES: {self.available_spaces}, "
-                + "TEMPC: 42"
-        )
+        readable_time = datetime.now().strftime('%H:%M:%S')
+        available_spaces = self.available_spaces
+        temperature = self.temperature()
+        print(f"TIME: {readable_time}, " +
+              f"SPACES: {available_spaces}, " +
+              f"TEMP: {temperature}")
+        message = (f"TIME: {readable_time}, " +
+                   f"SPACES: {available_spaces}, " +
+                   f"TEMP: {temperature}")
         self.client.publish('display', message)
 
     def on_car_entry(self):
@@ -59,18 +58,19 @@ class CarPark(mqtt_device.MqttDevice):
 
     def on_message(self, client, userdata, msg: MQTTMessage):
         payload = msg.payload.decode()
-        # TODO: Extract temperature from payload
-        # self.temperature = ...  look for temperature key # Extracted value
         if 'exit' in payload:
+            print("exit payload received")
             self.on_car_exit()
         else:
+            print("entry payload received")
             self.on_car_entry()
+
+
 
 
 if __name__ == '__main__':
     from config_parser import parse_config
 
     config = parse_config("config.toml")
-    car_park = CarPark(config['MOO'])
-
+    CarPark(config)
     print("Carpark initialized")

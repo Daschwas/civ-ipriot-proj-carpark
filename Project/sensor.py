@@ -9,15 +9,16 @@ class Sensor(mqtt_device.MqttDevice):
     def __init__(self, config):
         super().__init__(config['broker'])
         sensor_name = config['broker']['sensor']
+        print(f"Sensor {sensor_name} is ready")
 
-    @property
+    @property #consider removing
     def temperature(self):
         """Returns the current temperature"""
         return random.randint(10, 35) 
 
     def on_detection(self, message):
         """Triggered when a detection occurs"""
-        self.client.publish('sensor', message)
+        self.client.publish('car/sensor', message)
 
     def start_sensing(self):
         """ A blocking event loop that waits for detection events, in this

@@ -1,4 +1,5 @@
 from datetime import datetime
+from random import random
 
 import paho.mqtt.client as paho
 import mqtt_device
@@ -11,10 +12,8 @@ class CarPark(mqtt_device.MqttDevice):
 
     def __init__(self, config):
         super().__init__(config)
-        # carpark_name = config['location']
-
-        self.total_spaces = config['total-spaces']
-        self.total_cars = config['total-cars']
+        self.total_spaces = config['total_spaces']
+        self.total_cars = config['total_cars']
         self.client.on_message = self.on_message
         self.client.subscribe('sensor')
         self.client.loop_forever()
@@ -27,7 +26,7 @@ class CarPark(mqtt_device.MqttDevice):
 
     @property
     def temperature(self):
-        self._temperature
+        return self._temperature
 
     @temperature.setter
     def temperature(self, value):
@@ -37,15 +36,15 @@ class CarPark(mqtt_device.MqttDevice):
         readable_time = datetime.now().strftime('%H:%M')
         print(
             (
-                    f"TIME: {readable_time}, "
-                    + f"SPACES: {self.available_spaces}, "
-                    + "TEMPC: 42"
+                f"TIME: {readable_time}, "
+                + f"SPACES: {self.available_spaces}, "
+                + f"TEMP: {self.temperature}°C"
             )
         )
         message = (
-                f"TIME: {readable_time}, "
-                + f"SPACES: {self.available_spaces}, "
-                + "TEMPC: 42"
+            f"TIME: {readable_time}, "
+            + f"SPACES: {self.available_spaces}, "
+            + f"TEMP: {self.temperature}°C"
         )
         self.client.publish('display', message)
 
@@ -59,18 +58,12 @@ class CarPark(mqtt_device.MqttDevice):
 
     def on_message(self, client, userdata, msg: MQTTMessage):
         payload = msg.payload.decode()
-        # TODO: Extract temperature from payload
-        # self.temperature = ...  look for temperature key # Extracted value
         if 'exit' in payload:
             self.on_car_exit()
         else:
             self.on_car_entry()
 
-
-if __name__ == '__main__':
-    from config_parser import parse_config
-
-    config = parse_config("config.toml")
-    car_park = CarPark(config['MOO'])
-
-    print("Carpark initialized")
+    def adjust_temperature(self):
+        mean = 24  # Mean temperature
+        std_dev = 6  # Standard deviation
+        self.temperature = int(random.gauss(mean, std_dev))

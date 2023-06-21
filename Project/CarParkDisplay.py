@@ -1,12 +1,8 @@
 import random
 import threading
 import time
-from datetime import datetime
-import tkinter as tk
-from typing import Iterable
 from WindowedDisplay import WindowedDisplay
 import paho.mqtt.client as mqtt
-from config_parser import parse_config
 
 MQTT_HOST = "127.0.0.1"
 MQTT_PORT = 1883
@@ -29,8 +25,6 @@ class CarParkDisplay:
         self.time = ""
         self.temperature = ""
 
-
-
     def on_connect(self, client, userdata, flags, rc):
         print(f"{MQTT_CLIENT_NAME} is listening on port {MQTT_PORT} for messages with the topic {MQTT_TOPIC}")
 
@@ -44,14 +38,14 @@ class CarParkDisplay:
 
         self.spaces = values['SPACES']
         self.time = values['TIME']
-        self.temperature = values ['TEMP']
+        self.temperature = values['TEMP']
 
         field_values = dict(zip(CarParkDisplay.fields, [
             str(self.spaces),
             f'{self.temperature}℃',
             self.time
         ]))
-        print (f'{self.spaces, self.temperature}')
+        print(f'{self.spaces, self.temperature}')
         self.window.update(field_values)
 
     def check_updates(self):
@@ -71,9 +65,6 @@ class CarParkDisplay:
                 time.strftime("%H:%M:%S")]))
             self.window.update(field_values)
             time.sleep(10)
-
-
-
 
 
 if __name__ == '__main__':

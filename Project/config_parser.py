@@ -38,5 +38,3 @@ def parse_config(filename: str) -> dict:
     with open(filename, mode="rb") as fp:
         config = tomli.load(fp)
     return config
-
-import toml

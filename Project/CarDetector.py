@@ -1,11 +1,9 @@
 import tkinter as tk
-from typing import Iterable
-from datetime import datetime
 import mqtt_device
 from config_parser import parse_config
 
+
 class CarDetector(mqtt_device.MqttDevice):
-    """Provides a couple of simple buttons that can be used to represent a sensor detecting a car. This is a skeleton only."""
 
     def __init__(self, config):
         super().__init__(config['broker'])
@@ -16,7 +14,8 @@ class CarDetector(mqtt_device.MqttDevice):
             self.root, text='🚘 Incoming Car', font=('Arial', 50), cursor='right_side', command=self.incoming_car)
         self.btn_incoming_car.pack(padx=10, pady=5)
         self.btn_outgoing_car = tk.Button(
-            self.root, text='Outgoing Car 🚘',  font=('Arial', 50), cursor='bottom_left_corner', command=self.outgoing_car)
+            self.root, text='Outgoing Car 🚘',  font=('Arial', 50),
+            cursor='bottom_left_corner', command=self.outgoing_car)
         self.btn_outgoing_car.pack(padx=10, pady=5)
 
         self.root.mainloop()
@@ -32,6 +31,7 @@ class CarDetector(mqtt_device.MqttDevice):
         topic = "car/sensor"
         self.client.publish(topic, message)
         print("Car goes out")
+
 
 if __name__ == '__main__':
     config_file = 'config.toml'

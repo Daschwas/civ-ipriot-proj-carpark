@@ -1,9 +1,7 @@
 from datetime import datetime
 import random
 
-import paho.mqtt.client as paho
 import mqtt_device
-import toml as toml
 from paho.mqtt.client import MQTTMessage
 
 
@@ -19,7 +17,6 @@ class CarPark(mqtt_device.MqttDevice):
         self.client.on_message = self.on_message
         self.client.subscribe('car/sensor')
         self.client.loop_forever()
-
 
     @property
     def available_spaces(self):
@@ -64,8 +61,6 @@ class CarPark(mqtt_device.MqttDevice):
         else:
             print("entry payload received")
             self.on_car_entry()
-
-
 
 
 if __name__ == '__main__':

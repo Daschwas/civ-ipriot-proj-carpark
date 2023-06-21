@@ -1,0 +1,22 @@
+title = "Config"
+version = 1.0
+
+
+[broker] # this has 4 layers root -> qualifier -> name -> location. Could go down to 2 if needed.
+broker = "127.0.0.1" # Mosquitto (MQTT) server
+port = 1883
+topic-root = 'carpark' #MS Teams Team
+topic-qualifier = 'controller' #MS Teams channel
+name= 'parking-lot' #Channel conversation/discussion
+location = 'MOO' #location of the discussion
+sensor = "sensor 1"
+
+[MOO]
+name = 'Moondalup City Square Parking'
+total_spaces = 192
+total_cars = 0
+
+[sensor1]
+name = "entry"
+broker = "127.0.0.1"
+port = 1883

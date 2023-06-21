@@ -66,16 +66,16 @@ class TestCarPark(unittest.TestCase):
 
         self.car_park.on_car_entry()
 
-        self.assertEqual(self.car_park.total_cars, 101)
+        self.assertEqual(self.car_park.total_cars, 100)
         self.assertEqual(self.car_park.total_spaces, 100)
         self.assertEqual(self.car_park.available_spaces, 0)
 
         self.car_park.on_car_exit()
         self.car_park.on_car_exit()
 
-        self.assertEqual(self.car_park.total_cars, 99)
+        self.assertEqual(self.car_park.total_cars, 98)
         self.assertEqual(self.car_park.total_spaces, 100)
-        self.assertEqual(self.car_park.available_spaces, 1)
+        self.assertEqual(self.car_park.available_spaces, 2)
         print(self.car_park.available_spaces)
 
 if __name__ == '__main__':

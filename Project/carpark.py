@@ -45,10 +45,10 @@ class CarPark(mqtt_device.MqttDevice):
         self.client.publish('display', message)
 
     def on_car_entry(self):
-        if self.total_cars > self.total_spaces:
+        if self.total_cars >= self.total_spaces:
             print("You cannot enter - the parking lot is full.")
             return
-        
+
         self.total_cars += 1
         self._publish_event()
 
